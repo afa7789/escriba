@@ -9,6 +9,7 @@ A local browser-based audio transcription tool that runs entirely in your browse
 - **Multiple Model Sizes** - Choose between Tiny, Base, or Small Whisper models
 - **Batch Processing** - Transcribe multiple audio files at once
 - **Export Options** - Download individual text files or ZIP of all transcriptions
+- **Audio Recording** - Record directly from microphone and transcribe instantly
 - **Cross-Platform** - Works in any modern browser with WebGPU or WebAssembly support
 
 ## Usage
