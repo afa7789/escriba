@@ -389,6 +389,12 @@
             display: block;
         }
 
+        .copy-all-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 12px;
+        }
+
         .result-item {
             border: 1px solid var(--border-color);
             border-radius: 6px;
@@ -928,6 +934,16 @@
             let totalChars = 0;
             let totalTime = 0;
 
+            const hasMultiple = Object.keys(results).length > 1;
+            let copyAllButtonsHtml = '';
+            if (hasMultiple) {
+                copyAllButtonsHtml = `<div class="copy-all-container">
+                    <button class="result-btn" onclick="copyAllTranscriptions()">Copiar Todos</button>
+                </div>`;
+            }
+
+            resultsList.innerHTML = copyAllButtonsHtml;
+
             Object.entries(results).forEach(([filename, data]) => {
                 const isError = data.text.startsWith('Erro:');
                 const charCount = isError ? 0 : data.text.length;
@@ -948,6 +964,14 @@
                 `;
                 resultsList.appendChild(item);
             });
+
+            if (hasMultiple) {
+                const copyAllEnd = document.createElement('div');
+                copyAllEnd.className = 'copy-all-container';
+                copyAllEnd.style.marginTop = '12px';
+                copyAllEnd.innerHTML = `<button class="result-btn" onclick="copyAllTranscriptions()">Copiar Todos</button>`;
+                resultsList.appendChild(copyAllEnd);
+            }
 
             const avgTime = totalTime / Object.keys(results).length;
             const totalDuration = selectedFiles.reduce((sum, f) => sum + (timings[f.name] ? 0 : 0), 0);
@@ -1012,6 +1036,16 @@
 
             navigator.clipboard.writeText(data.text).then(() => {
                 alert('Copiado para a área de transferência!');
+            });
+        };
+
+        window.copyAllTranscriptions = () => {
+            const allText = Object.entries(results).map(([filename, data]) => {
+                return `=== ${filename} ===\n${data.text}`;
+            }).join('\n\n');
+
+            navigator.clipboard.writeText(allText).then(() => {
+                alert('Todas as transcrições copiadas!');
             });
         };
 
