@@ -1152,23 +1152,34 @@
         };
 
         downloadAllBtn.addEventListener('click', async () => {
-            const { default: JSZip } = await import('https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm');
-            const zip = new JSZip();
+            try {
+                if (Object.keys(results).length === 0) {
+                    showStatus('Nenhuma transcrição disponível para baixar.');
+                    return;
+                }
 
-            Object.entries(results).forEach(([filename, data]) => {
-                const txtName = `${filename.replace(/\.[^/.]+$/, '')}.txt`;
-                zip.file(txtName, data.text);
-            });
+                const { default: JSZip } = await import('https://cdn.jsdelivr.net/npm/jszip@3.10.1/+esm');
+                const zip = new JSZip();
 
-            const blob = await zip.generateAsync({ type: 'blob' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `transcricoes.zip`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+                Object.entries(results).forEach(([filename, data]) => {
+                    const txtName = `${filename.replace(/\.[^/.]+$/, '')}.txt`;
+                    zip.file(txtName, data.text);
+                });
+
+                const blob = await zip.generateAsync({ type: 'blob' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `transcricoes-${Date.now()}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showStatus('ZIP baixado com sucesso!');
+            } catch (err) {
+                console.error('Erro ao gerar ZIP:', err);
+                showStatus('Erro ao baixar ZIP: ' + err.message);
+            }
         });
 
         clearBtn.addEventListener('click', () => {
