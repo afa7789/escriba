@@ -1,3 +1,4 @@
+/* global Audio */
 import { state, el } from './state.js';
 import { clearStatus, showStatus } from './dom.js';
 import { AUDIO_EXTENSIONS } from './audio.js';
