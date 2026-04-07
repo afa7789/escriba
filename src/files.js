@@ -5,7 +5,7 @@ import { AUDIO_EXTENSIONS } from './audio.js';
 
 export async function handleFiles(files) {
     const audioFiles = Array.from(files).filter(f =>
-        f.type.startsWith('audio/') || AUDIO_EXTENSIONS.test(f.name)
+        f.type.startsWith('audio/') || f.type.startsWith('video/') || AUDIO_EXTENSIONS.test(f.name)
     );
 
     if (audioFiles.length === 0) {
